@@ -3,6 +3,7 @@ import outputs from "../../amplify_outputs.json";
 const { user_pool_id, user_pool_client_id, aws_region } = outputs.auth;
 const origin = typeof window !== "undefined" ? window.location.origin : "";
 
+export const clientId = user_pool_client_id;
 export const cognitoDomain = `https://customer-support.auth.${aws_region}.amazoncognito.com`;
 
 export const cognitoAuthConfig = {

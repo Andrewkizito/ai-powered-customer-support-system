@@ -1,6 +1,6 @@
 import { useAuth } from "react-oidc-context";
-import { cognitoDomain } from "./authConfig";
 import { useEffect } from "react";
+import { clientId, cognitoDomain } from "./authConfig";
 
 function App() {
   const auth = useAuth();
@@ -12,8 +12,8 @@ function App() {
   }, [auth.isAuthenticated]);
 
   const signOutRedirect = () => {
-    const clientId = auth.settings.client_id;
     const logoutUri = window.location.origin;
+    auth.removeUser();
     window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
   };
 
