@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "bun --hot src/backend/index.ts",
-    "start": "NODE_ENV=production bun src/backend/index.ts"
+    "start": "NODE_ENV=production bun src/backend/index.ts",
+    "sandbox": "npx ampx sandbox --profile c-dev"
   },
   "dependencies": {
+    "@aws-amplify/backend": "^1.23.0",
+    "@aws-amplify/backend-cli": "^1.8.3",
     "react": "^19",
     "react-dom": "^19"
   },
