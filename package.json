@@ -12,7 +12,8 @@
     "@aws-amplify/backend": "^1.23.0",
     "@aws-amplify/backend-cli": "^1.8.3",
     "react": "^19",
-    "react-dom": "^19"
+    "react-dom": "^19",
+    "react-router": "^7.17.0"
   },
   "devDependencies": {
     "@types/react": "^19",
