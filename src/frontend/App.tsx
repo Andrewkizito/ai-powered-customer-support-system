@@ -1,12 +1,19 @@
 import { useAuth } from "react-oidc-context";
+import { cognitoDomain } from "./authConfig";
+import { useEffect } from "react";
 
 function App() {
   const auth = useAuth();
 
+  useEffect(() => {
+    if (auth.isAuthenticated && window.location.search) {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, [auth.isAuthenticated]);
+
   const signOutRedirect = () => {
     const clientId = auth.settings.client_id;
     const logoutUri = window.location.origin;
-    const cognitoDomain = "https://customer-support.auth.us-east-1.amazoncognito.com";
     window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
   };
 
@@ -26,7 +33,7 @@ function App() {
         <pre> Access Token: {auth.user?.access_token} </pre>
         <pre> Refresh Token: {auth.user?.refresh_token} </pre>
 
-        <button onClick={() => auth.removeUser()}>Sign out</button>
+        <button onClick={signOutRedirect}>Sign out</button>
       </div>
     );
   }
@@ -34,7 +41,6 @@ function App() {
   return (
     <div>
       <button onClick={() => auth.signinRedirect()}>Sign in</button>
-      <button onClick={signOutRedirect}>Sign out</button>
     </div>
   );
 }
