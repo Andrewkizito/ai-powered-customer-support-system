@@ -1,40 +1,31 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/slice";
 
-const persistConfig = {
-  key: "root",
-  storage,
-  whitelist: ["auth"],
-};
+const PERSIST_KEY = "redux_root";
 
-const rootReducer = combineReducers({
-  auth: authReducer,
-});
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+function loadState() {
+  try {
+    const raw =
+      typeof window !== "undefined" && window.localStorage.getItem(PERSIST_KEY);
+    return raw ? JSON.parse(raw) : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 export const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
+  reducer: combineReducers({
+    auth: authReducer,
+  }),
+  preloadedState: loadState(),
 });
 
-export const persistor = persistStore(store);
+if (typeof window !== "undefined") {
+  store.subscribe(() => {
+    const state = store.getState();
+    window.localStorage.setItem(PERSIST_KEY, JSON.stringify(state));
+  });
+}
 
-export type RootState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
