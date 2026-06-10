@@ -11,9 +11,12 @@
   "dependencies": {
     "@aws-amplify/backend": "^1.23.0",
     "@aws-amplify/backend-cli": "^1.8.3",
+    "@reduxjs/toolkit": "^2.12.0",
     "react": "^19",
     "react-dom": "^19",
-    "react-router": "^7.17.0"
+    "react-redux": "^9.3.0",
+    "react-router": "^7.17.0",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@types/react": "^19",
