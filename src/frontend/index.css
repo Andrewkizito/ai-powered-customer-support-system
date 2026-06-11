@@ -2,7 +2,8 @@
 
 @layer base {
   :root {
-    @apply font-sans;
+    font-family: "Google Sans Flex", sans-serif;
+    font-optical-sizing: auto;
   }
 
   body {
