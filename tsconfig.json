@@ -22,15 +22,14 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
 
+    "paths": {
+      "@/*": ["./src/frontend/*"]
+    },
+
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false,
-
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "noPropertyAccessFromIndexSignature": false
   },
 
   "exclude": ["dist", "node_modules"]
