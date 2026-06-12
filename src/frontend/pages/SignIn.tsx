@@ -24,9 +24,9 @@ export function SignIn() {
         </div>
 
         <Card className="max-w-md mx-auto">
-          <CardHeader className="space-y-2 px-8 text-center">
+          <CardHeader className="space-y-2 px-3 pt-5 text-center">
             <CardTitle className="text-2xl font-semibold tracking-tight text-slate-950">
-              Sign in to your workspace
+              Sign into your workspace
             </CardTitle>
 
             <CardDescription className="mx-auto max-w-sm text-sm leading-6 text-slate-500">
@@ -35,10 +35,10 @@ export function SignIn() {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="px-8 pb-8 pt-3">
+          <CardContent className="px-8 pb-5 pt-3">
             <Button
               type="button"
-              className="h-12 w-full rounded-xl bg-primary text-base font-medium text-white shadow-sm transition hover:bg-blue-700"
+              className="h-12 w-full rounded-xl bg-primary text-sm font-normal text-white shadow-sm transition hover:bg-blue-700"
               onClick={() => auth.signinRedirect()}
               disabled={auth.isLoading}
             >
