@@ -9,7 +9,12 @@ const elem = document.getElementById("root")!;
 const app = (
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider {...cognitoAuthConfig}>
+      <AuthProvider
+        {...cognitoAuthConfig}
+        onSigninCallback={() => {
+          window.history.replaceState({}, document.title, "/");
+        }}
+      >
         <App />
       </AuthProvider>
     </BrowserRouter>

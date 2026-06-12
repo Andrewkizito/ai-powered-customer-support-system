@@ -9,3 +9,12 @@ export const cognitoAuthConfig = {
   response_type: "code",
   scope: "aws.cognito.signin.user.admin email openid phone profile",
 };
+
+export const signOutRedirect = (cb?: Function) => {
+  const clientId = cognitoAuthConfig.client_id;
+  const logoutUri = origin;
+  const cognitoDomain =
+    "https://customersupport.auth.us-east-1.amazoncognito.com";
+  window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+  cb?.();
+};

@@ -3,6 +3,10 @@ import index from "../frontend/index.html";
 
 const server = serve({
   routes: {
+    "/logo.png": new Response(Bun.file("public/logo.png"), {
+      headers: { "Content-Type": "image/png" },
+    }),
+
     // Serve index.html for all unmatched routes.
     "/*": index,
 
