@@ -91,17 +91,15 @@ const navGroups = [
 
 const AppSidebar = () => {
   return (
-    <aside className="fixed left-0 top-0 h-screen w-75 border-r bg-sidebar p-3">
-      <div className="flex items-center justify-center py-2">
+    <aside className="fixed left-0 top-0 h-screen w-75 border-r bg-sidebar">
+      <div className="flex items-center justify-center h-16 border-b">
         <img src="/logo.png" className="h-9 object-scale-down" />
       </div>
 
-      <Separator className="my-3" />
-
-      <nav className="flex flex-col gap-5">
+      <nav className="flex flex-col gap-5 p-3">
         {navGroups.map((group) => (
           <div key={group.title} className="space-y-1.5">
-            <h3 className="px-3 text-[11px] font-semibold uppercase tracking-wider text-sidebar-foreground/45">
+            <h3 className="px-3 text-[11px] font-semibold capitalize tracking-wider text-sidebar-foreground/45">
               {group.title}
             </h3>
 
@@ -116,7 +114,7 @@ const AppSidebar = () => {
                     end={item.href === "/dashboard"}
                     className={({ isActive }) =>
                       cn(
-                        "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/70 transition-colors",
+                        "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-normal text-sidebar-foreground/70 transition-colors",
                         "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                         isActive &&
                           "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary",
