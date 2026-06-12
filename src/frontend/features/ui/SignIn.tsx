@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { useAuth } from "react-oidc-context";
 
-export function SignIn() {
+const SignIn = () => {
   const auth = useAuth();
 
   return (
@@ -49,4 +49,6 @@ export function SignIn() {
       </div>
     </main>
   );
-}
+};
+
+export default SignIn;

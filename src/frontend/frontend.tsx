@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
 import { cognitoAuthConfig } from "./config/auth";
+import { TooltipProvider } from "./components/ui/tooltip";
 
 const elem = document.getElementById("root")!;
 const app = (
@@ -15,7 +16,9 @@ const app = (
           window.history.replaceState({}, document.title, "/");
         }}
       >
-        <App />
+        <TooltipProvider>
+          <App />
+        </TooltipProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>
