@@ -1,7 +1,7 @@
 import { serve } from "bun";
 import index from "../frontend/index.html";
 import { initDb } from "./db/index.ts";
-import { handleCreateIssue } from "./controllers/issues/core.ts";
+import { handleCreateIssue, handleGetIssues } from "./controllers/issues/core.ts";
 
 await initDb();
 
@@ -12,6 +12,7 @@ const server = serve({
     }),
 
     "/api/issues": {
+      GET: handleGetIssues,
       POST: handleCreateIssue,
     },
 
