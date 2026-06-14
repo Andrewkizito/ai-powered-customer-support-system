@@ -1,9 +1,17 @@
+// Hooks
 import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
-import SignIn from "./features/ui/SignIn";
-import Dashboard from "./features/ui/Dashboard";
+
+// Layout
 import CoreLayout from "./layout/core";
+import SignIn from "./features/ui/SignIn";
+
+// Pages
+import Dashboard from "./features/ui/Dashboard";
+import Issues from "./features/ui/Issues";
+
+// Root Styles
 import "./index.css";
 
 function RootGate() {
@@ -48,6 +56,7 @@ export function App() {
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/issues" element={<Issues />} />
       </Route>
     </Routes>
   );

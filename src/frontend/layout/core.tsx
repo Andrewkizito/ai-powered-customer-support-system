@@ -7,7 +7,7 @@ export default function CoreLayout() {
     <div className="w-screen h-screen relative bg-muted">
       <AppSidebar />
       <AppHeader />
-      <div className="h-screen ml-75 mt-16 p-3">
+      <div className="h-screen ml-75 mt-16 p-6">
         <Outlet />
       </div>
     </div>
