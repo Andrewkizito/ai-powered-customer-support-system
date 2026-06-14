@@ -64,7 +64,7 @@ FROM issues JOIN customers ON issues.customerId = customers.id${where}
 ORDER BY issues.createdAt DESC LIMIT ? OFFSET ?`).all(...params, filters.limit, offset) as Record<string, unknown>[];
 
   return {
-    issues: rows.map((r) => ({
+    data: rows.map((r) => ({
       ...r,
       customer: JSON.parse(r.customer as string),
     })),

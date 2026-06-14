@@ -22,14 +22,39 @@ export enum IssuePriority {
 
 export interface Issue {
   id: string;
-  type: IssueType;
-  status: IssueStatus;
-  priority: IssuePriority;
-  subject: string;
-  description: string;
+  type: string | null;
+  status: string;
+  priority: string | null;
+  subject: string | null;
+  description: string | null;
   userText: string;
   customerId: string;
-  assigneeId?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  assigneeId: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
+
+export interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  profilePicture: string | null;
+}
+
+export interface IssueWithCustomer extends Issue {
+  customer: Customer;
+}
+
+export interface PaginationMeta {
+  limit: number;
+  page: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  metadata: PaginationMeta;
+}
+
+export type IssueListResponse = PaginatedResponse<IssueWithCustomer>;
