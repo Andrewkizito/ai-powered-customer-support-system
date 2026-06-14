@@ -1,6 +1,8 @@
 import { z } from "zod";
 import db from "../../db/index.ts";
 import { IssueType, IssueStatus, IssuePriority } from "./types.ts";
+import { emit } from "../../events/core.ts";
+import { EventType } from "../../events/types.ts";
 
 const issueTypes = Object.values(IssueType) as [string, ...string[]];
 const issuePriorities = Object.values(IssuePriority) as [string, ...string[]];
@@ -16,7 +18,7 @@ export const CreateIssueSchema = z.object({
 
 export type CreateIssueInput = z.infer<typeof CreateIssueSchema>;
 
-export function createIssue(input: CreateIssueInput) {
+function createIssue(input: CreateIssueInput) {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
 
@@ -37,5 +39,20 @@ export function createIssue(input: CreateIssueInput) {
     ],
   );
 
-  return db.query("SELECT * FROM issues WHERE id = ?").get(id) as Record<string, unknown>;
+  return db.query("SELECT * FROM issues WHERE id = ?").get(id) as Record<
+    string,
+    unknown
+  >;
+}
+
+export async function handleCreateIssue(req: Request): Promise<Response> {
+  const body = await req.json();
+  const parsed = CreateIssueSchema.safeParse(body);
+  if (!parsed.success) {
+    return Response.json({ error: parsed.error.issues }, { status: 400 });
+  }
+
+  const issue = createIssue(parsed.data);
+  emit(EventType.IssueCreated, { issueId: issue.id as string });
+  return Response.json(issue, { status: 201 });
 }
