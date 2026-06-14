@@ -1,4 +1,5 @@
 import db from "../index.ts";
+import type { IssueWithCustomer, IssueListResponse } from "../../controllers/issues/types.ts";
 
 export interface CreateIssueInput {
   customerId: string;
@@ -12,7 +13,14 @@ export interface GetIssuesInput {
   page: number;
 }
 
-export function createIssue(input: CreateIssueInput) {
+function parseIssueRow(row: Record<string, unknown>): IssueWithCustomer {
+  return {
+    ...row,
+    customer: JSON.parse(row.customer as string),
+  } as unknown as IssueWithCustomer;
+}
+
+export function createIssue(input: CreateIssueInput): IssueWithCustomer {
   const id = crypto.randomUUID();
 
   db.run(`INSERT INTO issues (id, userText, customerId) VALUES (?, ?, ?)`, [
@@ -30,13 +38,10 @@ export function createIssue(input: CreateIssueInput) {
 FROM issues JOIN customers ON issues.customerId = customers.id
 WHERE issues.id = ?`).get(id) as Record<string, unknown>;
 
-  return {
-    ...row,
-    customer: JSON.parse(row.customer as string),
-  };
+  return parseIssueRow(row);
 }
 
-export function getIssue(id: string) {
+export function getIssue(id: string): IssueWithCustomer | null {
   const row = db.query(`SELECT issues.*, json_object(
     'id', customers.id,
     'name', customers.name,
@@ -48,13 +53,10 @@ WHERE issues.id = ?`).get(id) as Record<string, unknown> | undefined;
 
   if (!row) return null;
 
-  return {
-    ...row,
-    customer: JSON.parse(row.customer as string),
-  };
+  return parseIssueRow(row);
 }
 
-export function getIssues(filters: GetIssuesInput) {
+export function getIssues(filters: GetIssuesInput): IssueListResponse {
   const params: (string | number)[] = [];
   const conditions: string[] = [];
 
@@ -84,10 +86,7 @@ FROM issues JOIN customers ON issues.customerId = customers.id${where}
 ORDER BY issues.createdAt DESC LIMIT ? OFFSET ?`).all(...params, filters.limit, offset) as Record<string, unknown>[];
 
   return {
-    data: rows.map((r) => ({
-      ...r,
-      customer: JSON.parse(r.customer as string),
-    })),
+    data: rows.map(parseIssueRow),
     metadata: {
       limit: filters.limit,
       page: filters.page,
