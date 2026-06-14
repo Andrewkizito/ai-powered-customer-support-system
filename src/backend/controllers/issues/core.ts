@@ -33,24 +33,31 @@ function createIssue(input: CreateIssueInput) {
 }
 
 function getIssues(filters: GetIssuesInput) {
-  let sql = "SELECT * FROM issues";
+  let sql = `SELECT issues.*, json_object(
+    'id', customers.id,
+    'name', customers.name,
+    'email', customers.email,
+    'profilePicture', customers.profilePicture
+  ) AS customer
+FROM issues JOIN customers ON issues.customerId = customers.id`;
   const params: string[] = [];
   const conditions: string[] = [];
 
   if (filters.status) {
-    conditions.push("status = ?");
+    conditions.push("issues.status = ?");
     params.push(filters.status);
   }
   if (filters.customerId) {
-    conditions.push("customerId = ?");
+    conditions.push("issues.customerId = ?");
     params.push(filters.customerId);
   }
   if (conditions.length > 0) {
     sql += " WHERE " + conditions.join(" AND ");
   }
-  sql += " ORDER BY createdAt DESC";
+  sql += " ORDER BY issues.createdAt DESC";
 
-  return db.query(sql).all(...params) as Record<string, unknown>[];
+  const rows = db.query(sql).all(...params) as Record<string, unknown>[];
+  return rows.map((r) => ({ ...r, customer: JSON.parse(r.customer as string) }));
 }
 
 export async function handleGetIssues(req: Request): Promise<Response> {
