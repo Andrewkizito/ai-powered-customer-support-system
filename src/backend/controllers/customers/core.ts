@@ -1,8 +1,5 @@
-import db from "../../db/index.ts";
+import { getAllCustomers } from "../../db/sql/customers.ts";
 
 export function handleGetCustomers(): Response {
-  const customers = db.query(
-    "SELECT id, name, email, profilePicture FROM customers ORDER BY name ASC",
-  ).all();
-  return Response.json(customers);
+  return Response.json(getAllCustomers());
 }

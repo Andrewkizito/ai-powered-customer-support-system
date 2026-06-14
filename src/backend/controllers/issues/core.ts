@@ -1,5 +1,6 @@
 import { z } from "zod";
-import db from "../../db/index.ts";
+import { createIssue, getIssues } from "../../db/sql/issues.ts";
+import type { CreateIssueInput, GetIssuesInput } from "../../db/sql/issues.ts";
 import { emit } from "../../events/core.ts";
 import { EventType } from "../../events/types.ts";
 
@@ -8,7 +9,7 @@ export const CreateIssueSchema = z.object({
   userText: z.string().min(1),
 });
 
-export type CreateIssueInput = z.infer<typeof CreateIssueSchema>;
+export type { CreateIssueInput, GetIssuesInput };
 
 export const GetIssuesSchema = z.object({
   status: z.string().optional(),
@@ -16,75 +17,6 @@ export const GetIssuesSchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(20),
   page: z.coerce.number().min(1).default(1),
 });
-
-export type GetIssuesInput = z.infer<typeof GetIssuesSchema>;
-
-function createIssue(input: CreateIssueInput) {
-  const id = crypto.randomUUID();
-
-  db.run(`INSERT INTO issues (id, userText, customerId) VALUES (?, ?, ?)`, [
-    id,
-    input.userText,
-    input.customerId,
-  ]);
-
-  const row = db.query(`SELECT issues.*, json_object(
-    'id', customers.id,
-    'name', customers.name,
-    'email', customers.email,
-    'profilePicture', customers.profilePicture
-  ) AS customer
-FROM issues JOIN customers ON issues.customerId = customers.id
-WHERE issues.id = ?`).get(id) as Record<string, unknown>;
-
-  return {
-    ...row,
-    customer: JSON.parse(row.customer as string),
-  };
-}
-
-function getIssues(filters: GetIssuesInput) {
-  const params: (string | number)[] = [];
-  const conditions: string[] = [];
-
-  if (filters.status) {
-    conditions.push("issues.status = ?");
-    params.push(filters.status);
-  }
-  if (filters.customerId) {
-    conditions.push("issues.customerId = ?");
-    params.push(filters.customerId);
-  }
-
-  const where = conditions.length > 0 ? " WHERE " + conditions.join(" AND ") : "";
-
-  const total = db.query(
-    `SELECT COUNT(*) as count FROM issues${where}`,
-  ).get(...params) as { count: number };
-
-  const offset = (filters.page - 1) * filters.limit;
-  const rows = db.query(`SELECT issues.*, json_object(
-    'id', customers.id,
-    'name', customers.name,
-    'email', customers.email,
-    'profilePicture', customers.profilePicture
-  ) AS customer
-FROM issues JOIN customers ON issues.customerId = customers.id${where}
-ORDER BY issues.createdAt DESC LIMIT ? OFFSET ?`).all(...params, filters.limit, offset) as Record<string, unknown>[];
-
-  return {
-    data: rows.map((r) => ({
-      ...r,
-      customer: JSON.parse(r.customer as string),
-    })),
-    metadata: {
-      limit: filters.limit,
-      page: filters.page,
-      total: total.count,
-      totalPages: Math.ceil(total.count / filters.limit),
-    },
-  };
-}
 
 export async function handleGetIssues(req: Request): Promise<Response> {
   try {
