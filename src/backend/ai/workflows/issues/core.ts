@@ -1,8 +1,10 @@
 import { END, START, StateGraph } from "@langchain/langgraph";
-import { ClassificationSchema } from "./schema";
-import { resolveIssueDetails } from "./classify";
+import { ClassificationState } from "./schema";
+import { resolveIssueDetails, classifyIssue } from "./classify";
 
-const classificationWorkflow = new StateGraph(ClassificationSchema)
+export const classificationWorkflow = new StateGraph(ClassificationState)
   .addNode("resolveIssueDetails", resolveIssueDetails)
+  .addNode("classifyIssue", classifyIssue)
   .addEdge(START, "resolveIssueDetails")
-  .addEdge("resolveIssueDetails", END);
+  .addEdge("resolveIssueDetails", "classifyIssue")
+  .addEdge("classifyIssue", END);
