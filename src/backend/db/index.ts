@@ -1,5 +1,6 @@
 import { Database } from "bun:sqlite";
 import chalk from "chalk";
+import { seed } from "./seed.ts";
 
 const db = new Database("data/customer-support.db");
 
@@ -11,6 +12,7 @@ export async function initDb() {
   ).text();
   db.run(initSql);
   console.log(chalk.green("✓ Database connected and initialized"));
+  seed(db);
 }
 
 export default db;
