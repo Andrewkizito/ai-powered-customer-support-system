@@ -1,5 +1,8 @@
 import db from "../index.ts";
-import type { IssueWithCustomer, IssueListResponse } from "../../controllers/issues/types.ts";
+import type {
+  IssueWithCustomer,
+  IssueListResponse,
+} from "../../controllers/issues/types.ts";
 
 export interface CreateIssueInput {
   customerId: string;
@@ -29,27 +32,35 @@ export function createIssue(input: CreateIssueInput): IssueWithCustomer {
     input.customerId,
   ]);
 
-  const row = db.query(`SELECT issues.*, json_object(
+  const row = db
+    .query(
+      `SELECT issues.*, json_object(
     'id', customers.id,
     'name', customers.name,
     'email', customers.email,
     'profilePicture', customers.profilePicture
   ) AS customer
 FROM issues JOIN customers ON issues.customerId = customers.id
-WHERE issues.id = ?`).get(id) as Record<string, unknown>;
+WHERE issues.id = ?`,
+    )
+    .get(id) as Record<string, unknown>;
 
   return parseIssueRow(row);
 }
 
 export function getIssue(id: string): IssueWithCustomer | null {
-  const row = db.query(`SELECT issues.*, json_object(
+  const row = db
+    .query(
+      `SELECT issues.*, json_object(
     'id', customers.id,
     'name', customers.name,
     'email', customers.email,
     'profilePicture', customers.profilePicture
   ) AS customer
 FROM issues JOIN customers ON issues.customerId = customers.id
-WHERE issues.id = ?`).get(id) as Record<string, unknown> | undefined;
+WHERE issues.id = ?`,
+    )
+    .get(id) as Record<string, unknown> | undefined;
 
   if (!row) return null;
 
@@ -69,21 +80,26 @@ export function getIssues(filters: GetIssuesInput): IssueListResponse {
     params.push(filters.customerId);
   }
 
-  const where = conditions.length > 0 ? " WHERE " + conditions.join(" AND ") : "";
+  const where =
+    conditions.length > 0 ? " WHERE " + conditions.join(" AND ") : "";
 
-  const total = db.query(
-    `SELECT COUNT(*) as count FROM issues${where}`,
-  ).get(...params) as { count: number };
+  const total = db
+    .query(`SELECT COUNT(*) as count FROM issues${where}`)
+    .get(...params) as { count: number };
 
   const offset = (filters.page - 1) * filters.limit;
-  const rows = db.query(`SELECT issues.*, json_object(
+  const rows = db
+    .query(
+      `SELECT issues.*, json_object(
     'id', customers.id,
     'name', customers.name,
     'email', customers.email,
     'profilePicture', customers.profilePicture
   ) AS customer
 FROM issues JOIN customers ON issues.customerId = customers.id${where}
-ORDER BY issues.createdAt DESC LIMIT ? OFFSET ?`).all(...params, filters.limit, offset) as Record<string, unknown>[];
+ORDER BY issues.createdAt DESC LIMIT ? OFFSET ?`,
+    )
+    .all(...params, filters.limit, offset) as Record<string, unknown>[];
 
   return {
     data: rows.map(parseIssueRow),
