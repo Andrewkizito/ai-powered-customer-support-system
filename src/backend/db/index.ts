@@ -1,12 +1,16 @@
 import { Database } from "bun:sqlite";
-import initSql from "./sql/init.sql";
+import chalk from "chalk";
 
 const db = new Database("data/customer-support.db");
 
 db.run("PRAGMA foreign_keys = ON;");
 
-export function initDb() {
+export async function initDb() {
+  const initSql = await Bun.file(
+    import.meta.dir + "/sql/init.sql",
+  ).text();
   db.run(initSql);
+  console.log(chalk.green("✓ Database connected and initialized"));
 }
 
 export default db;

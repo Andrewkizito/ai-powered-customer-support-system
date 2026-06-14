@@ -2,7 +2,7 @@ import { serve } from "bun";
 import index from "../frontend/index.html";
 import { initDb } from "./db/index.ts";
 
-initDb();
+await initDb();
 
 const server = serve({
   routes: {
