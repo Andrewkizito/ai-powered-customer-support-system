@@ -128,7 +128,7 @@ export function IssueTable() {
 
                     <TableCell>
                       <div className="flex min-w-0 items-center gap-3">
-                        <Avatar className="size-8 border">
+                        <Avatar className="size-10 border">
                           <AvatarImage
                             src={issue.customer.profilePicture ?? undefined}
                             alt={issue.customer.name}

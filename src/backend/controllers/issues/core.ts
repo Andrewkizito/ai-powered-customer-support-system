@@ -28,10 +28,19 @@ function createIssue(input: CreateIssueInput) {
     input.customerId,
   ]);
 
-  return db.query("SELECT * FROM issues WHERE id = ?").get(id) as Record<
-    string,
-    unknown
-  >;
+  const row = db.query(`SELECT issues.*, json_object(
+    'id', customers.id,
+    'name', customers.name,
+    'email', customers.email,
+    'profilePicture', customers.profilePicture
+  ) AS customer
+FROM issues JOIN customers ON issues.customerId = customers.id
+WHERE issues.id = ?`).get(id) as Record<string, unknown>;
+
+  return {
+    ...row,
+    customer: JSON.parse(row.customer as string),
+  };
 }
 
 function getIssues(filters: GetIssuesInput) {

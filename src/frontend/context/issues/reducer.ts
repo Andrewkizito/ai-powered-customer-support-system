@@ -35,13 +35,7 @@ const issuesSlice = createSlice({
         state.loading = false;
         state.error = action.error.message ?? "Something went wrong";
       })
-      .addCase(createIssue.fulfilled, (state, action) => {
-        state.issues.unshift(action.payload);
-        if (state.metadata) {
-          state.metadata.total += 1;
-          state.metadata.totalPages = Math.ceil(state.metadata.total / state.metadata.limit);
-        }
-      });
+      // createIssue.fulfilled — dialog handles refetch
   },
 });
 

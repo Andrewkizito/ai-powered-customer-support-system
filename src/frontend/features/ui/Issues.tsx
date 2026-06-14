@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RiAddLine } from "react-icons/ri";
 import { IssueTable } from "@/features/use-cases/issues/issue-table.tsx";
+import { CreateIssueDialog } from "@/features/use-cases/issues/create-issue-dialog.tsx";
 
 const Issues = () => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   return (
     <div>
       <div className="flex items-start justify-between mb-6">
@@ -12,13 +16,14 @@ const Issues = () => {
             View and manage all customer support issues.
           </p>
         </div>
-        <Button className="font-medium">
+        <Button className="font-medium" onClick={() => setDialogOpen(true)}>
           <RiAddLine className="size-4" />
           Add Issue
         </Button>
       </div>
 
       <IssueTable />
+      <CreateIssueDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </div>
   );
 };

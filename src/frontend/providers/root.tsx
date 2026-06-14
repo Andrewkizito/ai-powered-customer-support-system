@@ -2,6 +2,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "react-oidc-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "sonner";
 import { cognitoAuthConfig } from "@/config/auth";
 import { store } from "@/context/index.ts";
 import { PrefetchProvider } from "./prefetch.tsx";
@@ -21,6 +22,7 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
               {children}
             </PrefetchProvider>
           </TooltipProvider>
+          <Toaster richColors />
         </AuthProvider>
       </BrowserRouter>
     </Provider>
