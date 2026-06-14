@@ -2,6 +2,7 @@ import { serve } from "bun";
 import index from "../frontend/index.html";
 import { initDb } from "./db/index.ts";
 import { handleCreateIssue, handleGetIssues } from "./controllers/issues/core.ts";
+import { handleGetCustomers } from "./controllers/customers/core.ts";
 
 await initDb();
 
@@ -14,6 +15,10 @@ const server = serve({
     "/api/issues": {
       GET: handleGetIssues,
       POST: handleCreateIssue,
+    },
+
+    "/api/customers": {
+      GET: handleGetCustomers,
     },
 
     "/*": index,
