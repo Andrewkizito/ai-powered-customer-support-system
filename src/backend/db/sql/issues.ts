@@ -67,6 +67,33 @@ WHERE issues.id = ?`,
   return parseIssueRow(row);
 }
 
+export function updateIssue(
+  id: string,
+  data: {
+    type?: string;
+    priority?: string;
+    subject?: string;
+    description?: string;
+  },
+): void {
+  const fields: string[] = [];
+  const params: (string | number)[] = [];
+
+  for (const [key, value] of Object.entries(data)) {
+    if (value !== undefined) {
+      fields.push(`${key} = ?`);
+      params.push(value);
+    }
+  }
+
+  if (fields.length === 0) return;
+
+  fields.push("updatedAt = datetime('now')");
+  params.push(id);
+
+  db.run(`UPDATE issues SET ${fields.join(", ")} WHERE id = ?`, params);
+}
+
 export function getIssues(filters: GetIssuesInput): IssueListResponse {
   const params: (string | number)[] = [];
   const conditions: string[] = [];

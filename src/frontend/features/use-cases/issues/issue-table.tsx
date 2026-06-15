@@ -11,9 +11,40 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
+import {
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+  RiBugLine,
+  RiLightbulbLine,
+  RiBankCardLine,
+  RiUserLine,
+  RiQuestionLine,
+} from "react-icons/ri";
 import { useAppSelector, useAppDispatch } from "@/context/hooks";
 import { fetchIssues } from "@/context/issues/actions";
+
+const typeConfig: Record<string, { icon: React.ReactNode; badgeClass: string }> = {
+  bug: {
+    icon: <RiBugLine className="size-3.5" />,
+    badgeClass: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800",
+  },
+  feature_request: {
+    icon: <RiLightbulbLine className="size-3.5" />,
+    badgeClass: "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-800",
+  },
+  billing: {
+    icon: <RiBankCardLine className="size-3.5" />,
+    badgeClass: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
+  },
+  account: {
+    icon: <RiUserLine className="size-3.5" />,
+    badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
+  },
+  general: {
+    icon: <RiQuestionLine className="size-3.5" />,
+    badgeClass: "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:border-slate-800",
+  },
+};
 
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString("en-GB", {
@@ -81,6 +112,10 @@ export function IssueTable() {
                     ID
                   </TableHead>
 
+                  <TableHead className="w-20 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Type
+                  </TableHead>
+
                   <TableHead className="w-[320px] text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     Issue
                   </TableHead>
@@ -111,9 +146,21 @@ export function IssueTable() {
                       </span>
                     </TableCell>
 
+                    <TableCell className="w-20">
+                      {issue.type && (
+                        <Badge
+                          variant="outline"
+                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-normal capitalize ${typeConfig[issue.type]?.badgeClass ?? ""}`}
+                        >
+                          {typeConfig[issue.type]?.icon}
+                          {issue.type.replace("_", " ")}
+                        </Badge>
+                      )}
+                    </TableCell>
+
                     <TableCell className="w-[320px]">
                       <p className="max-w-75 truncate text-sm font-medium text-foreground">
-                        {issue.userText}
+                        {issue.subject || issue.userText}
                       </p>
                     </TableCell>
 

@@ -10,11 +10,11 @@ export function on<E extends EventType>(
   emitter.on(event, handler);
 }
 
-export function emit<E extends EventType>(
-  event: E,
-  payload: EventPayloads[E],
-) {
+export function emit<E extends EventType>(event: E, payload: EventPayloads[E]) {
   emitter.emit(event, payload);
 }
 
-export default emitter;
+export default {
+  on,
+  emit,
+};

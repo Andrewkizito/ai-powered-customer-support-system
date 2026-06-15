@@ -3,6 +3,7 @@ import index from "../frontend/index.html";
 import { initDb } from "./db/index.ts";
 import { handleCreateIssue, handleGetIssues } from "./controllers/issues/core.ts";
 import { handleGetCustomers } from "./controllers/customers/core.ts";
+import "./ai/workflows/issues/core.ts";
 
 await initDb();
 
