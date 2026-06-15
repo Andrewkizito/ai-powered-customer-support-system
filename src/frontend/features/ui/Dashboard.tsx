@@ -1,7 +1,5 @@
-import React from "react";
+import OverviewCards from "../use-cases/dashboard/cards";
 
-const Dashboard = () => {
-  return <div>Dashboard</div>;
-};
-
-export default Dashboard;
+export default function Dashboard() {
+  return <OverviewCards />;
+}
