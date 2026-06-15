@@ -6,11 +6,11 @@ import {
   updateIssueFromClassification,
   resolveGeneralQuestion,
   answerGeneralQuetion,
-} from "./classify";
+} from "./nodes";
 import events from "../../../events/core";
 import { EventType } from "../../../events/types";
 
-const classificationWorkflow = new StateGraph(ClassificationState)
+const issueWorkflow = new StateGraph(ClassificationState)
   // Nodes
   .addNode("resolveIssueDetails", resolveIssueDetails)
   .addNode("classifyIssue", classifyIssue)
@@ -28,7 +28,7 @@ const classificationWorkflow = new StateGraph(ClassificationState)
 
 events.on(EventType.IssueCreated, async function (payload) {
   try {
-    const res = await classificationWorkflow.invoke({
+    const res = await issueWorkflow.invoke({
       issueId: payload.issueId,
     });
 

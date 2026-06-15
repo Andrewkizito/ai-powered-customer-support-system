@@ -154,13 +154,14 @@ export const updateIssueFromClassification: IssueNode = async (state) => {
 };
 
 // Specialized Nodes
-
 export const resolveGeneralQuestion: IssueNode = async (state) => {
   const { classification } = state;
 
   if (classification?.isBogus) {
     console.log(
-      chalk.red(`[resolveGeneralQuestion] Bogus issue ${state.issueId}, closing`),
+      chalk.red(
+        `[resolveGeneralQuestion] Bogus issue ${state.issueId}, closing`,
+      ),
     );
     updateIssue(state.issueId, { status: IssueStatus.Closed });
     return new Command({ goto: END });
