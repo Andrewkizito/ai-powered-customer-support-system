@@ -70,7 +70,7 @@ export const classifyIssue: IssueNode = async (state) => {
       {
         role: "system",
         content:
-          "You are a customer support triage specialist. Classify the following issue.",
+          "You are a customer support triage specialist. Classify the following issue. Set isBogus to true if the issue is spam, gibberish, or abusive content.",
       },
       {
         role: "user",
@@ -157,6 +157,14 @@ export const updateIssueFromClassification: IssueNode = async (state) => {
 
 export const resolveGeneralQuestion: IssueNode = async (state) => {
   const { classification } = state;
+
+  if (classification?.isBogus) {
+    console.log(
+      chalk.red(`[resolveGeneralQuestion] Bogus issue ${state.issueId}, closing`),
+    );
+    updateIssue(state.issueId, { status: IssueStatus.Closed });
+    return new Command({ goto: END });
+  }
 
   if (!classification?.isQuestion) {
     console.log(

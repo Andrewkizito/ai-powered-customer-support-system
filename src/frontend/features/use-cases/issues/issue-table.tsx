@@ -31,64 +31,86 @@ import {
 import { useAppSelector, useAppDispatch } from "@/context/hooks";
 import { fetchIssues } from "@/context/issues/actions";
 
-const typeConfig: Record<string, { icon: React.ReactNode; badgeClass: string }> = {
+const typeConfig: Record<
+  string,
+  { icon: React.ReactNode; badgeClass: string }
+> = {
   bug: {
     icon: <RiBugLine className="size-3.5" />,
-    badgeClass: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800",
+    badgeClass:
+      "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800",
   },
   feature_request: {
     icon: <RiLightbulbLine className="size-3.5" />,
-    badgeClass: "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-800",
+    badgeClass:
+      "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950 dark:text-violet-300 dark:border-violet-800",
   },
   billing: {
     icon: <RiBankCardLine className="size-3.5" />,
-    badgeClass: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
+    badgeClass:
+      "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
   },
   account: {
     icon: <RiUserLine className="size-3.5" />,
-    badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
+    badgeClass:
+      "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
   },
   general: {
     icon: <RiQuestionLine className="size-3.5" />,
-    badgeClass: "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:border-slate-800",
+    badgeClass:
+      "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:border-slate-800",
   },
 };
 
-const priorityConfig: Record<string, { icon: React.ReactNode; badgeClass: string }> = {
+const priorityConfig: Record<
+  string,
+  { icon: React.ReactNode; badgeClass: string }
+> = {
   critical: {
     icon: <RiErrorWarningLine className="size-3.5" />,
-    badgeClass: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800",
+    badgeClass:
+      "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800",
   },
   high: {
     icon: <RiArrowUpLine className="size-3.5" />,
-    badgeClass: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800",
+    badgeClass:
+      "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800",
   },
   medium: {
     icon: <RiSubtractLine className="size-3.5" />,
-    badgeClass: "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-300 dark:border-yellow-800",
+    badgeClass:
+      "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-300 dark:border-yellow-800",
   },
   low: {
     icon: <RiArrowDownLine className="size-3.5" />,
-    badgeClass: "bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800",
+    badgeClass:
+      "bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800",
   },
 };
 
-const statusConfig: Record<string, { icon: React.ReactNode; badgeClass: string }> = {
+const statusConfig: Record<
+  string,
+  { icon: React.ReactNode; badgeClass: string }
+> = {
   open: {
     icon: <RiMailOpenLine className="size-3.5" />,
-    badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
+    badgeClass:
+      "bg-blue-100 text-blue-700 dark:bg-blue-950/70 dark:text-blue-300",
   },
   in_progress: {
     icon: <RiTimeLine className="size-3.5" />,
-    badgeClass: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
+    badgeClass:
+      "bg-amber-100 text-amber-700 dark:bg-amber-950/70 dark:text-amber-300",
   },
   resolved: {
     icon: <RiCheckLine className="size-3.5" />,
-    badgeClass: "bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800",
+    badgeClass:
+      "bg-green-100 text-green-700 dark:bg-green-950/70 dark:text-green-300",
   },
   closed: {
     icon: <RiCloseCircleLine className="size-3.5" />,
-    badgeClass: "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:border-slate-800",
+    badgeClass:
+      "bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-300",
   },
 };
 
@@ -200,7 +222,9 @@ export function IssueTable() {
                       {issue.type && (
                         <Badge
                           variant="outline"
-                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-normal capitalize ${typeConfig[issue.type]?.badgeClass ?? ""}`}
+                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-normal capitalize ${
+                            typeConfig[issue.type]?.badgeClass ?? ""
+                          }`}
                         >
                           {typeConfig[issue.type]?.icon}
                           {issue.type.replace("_", " ")}
@@ -216,8 +240,9 @@ export function IssueTable() {
 
                     <TableCell className="w-35">
                       <Badge
-                        variant="outline"
-                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-normal capitalize ${statusConfig[issue.status]?.badgeClass ?? ""}`}
+                        className={`inline-flex items-center gap-1 rounded-full border-transparent px-2.5 py-0.5 text-xs font-normal capitalize shadow-none ${
+                          statusConfig[issue.status]?.badgeClass ?? ""
+                        }`}
                       >
                         {statusConfig[issue.status]?.icon}
                         {issue.status.replace("_", " ")}
@@ -228,7 +253,9 @@ export function IssueTable() {
                       {issue.priority && (
                         <Badge
                           variant="outline"
-                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-normal capitalize ${priorityConfig[issue.priority]?.badgeClass ?? ""}`}
+                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-normal capitalize ${
+                            priorityConfig[issue.priority]?.badgeClass ?? ""
+                          }`}
                         >
                           {priorityConfig[issue.priority]?.icon}
                           {issue.priority}
@@ -280,22 +307,22 @@ export function IssueTable() {
 
                 <div className="flex items-center gap-2">
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="icon"
                     disabled={currentPage <= 1}
                     onClick={() => goToPage(currentPage - 1)}
-                    className="size-8"
+                    className="size-8 rounded-full shadow-none"
                     aria-label="Previous page"
                   >
                     <RiArrowLeftSLine className="size-5" />
                   </Button>
 
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="icon"
                     disabled={currentPage >= totalPages}
                     onClick={() => goToPage(currentPage + 1)}
-                    className="size-8"
+                    className="size-8 rounded-full shadow-none"
                     aria-label="Next page"
                   >
                     <RiArrowRightSLine className="size-5" />

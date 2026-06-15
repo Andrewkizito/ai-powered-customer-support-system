@@ -13,6 +13,7 @@ export const ClassificationSchema = z.object({
   summary: z.string(),
   description: z.string(),
   isQuestion: z.boolean(),
+  isBogus: z.boolean(),
 });
 
 export type Classification = z.infer<typeof ClassificationSchema>;
