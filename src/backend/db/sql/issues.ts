@@ -1,4 +1,4 @@
-import db from "../index.ts";
+import db from "./index.ts";
 import type {
   IssueWithCustomer,
   IssueListResponse,

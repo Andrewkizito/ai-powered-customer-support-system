@@ -1,8 +1,11 @@
 import { serve } from "bun";
 import index from "../frontend/index.html";
-import { initDb } from "./db/index.ts";
+import { initDb } from "./db/sql/index.ts";
 import { initChroma } from "./db/chroma/index.ts";
-import { handleCreateIssue, handleGetIssues } from "./controllers/issues/core.ts";
+import {
+  handleCreateIssue,
+  handleGetIssues,
+} from "./controllers/issues/core.ts";
 import { handleGetCustomers } from "./controllers/customers/core.ts";
 import "./ai/workflows/issues/core.ts";
 
