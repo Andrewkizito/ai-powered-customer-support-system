@@ -7,6 +7,7 @@
     "dev": "bun --hot src/backend/index.ts",
     "start": "NODE_ENV=production bun src/backend/index.ts",
     "sandbox": "npx ampx sandbox --identifier cs-dev --profile c-dev",
+    "db:reset": "rm -rf data/customer-support.db && touch data/customer-support.db",
     "build": "bun run build.ts"
   },
   "dependencies": {

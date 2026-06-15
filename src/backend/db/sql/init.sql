@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS issues (
   priority TEXT CHECK(priority IN ('low', 'medium', 'high', 'critical')),
   subject TEXT,
   description TEXT,
+  response TEXT,
   userText TEXT NOT NULL DEFAULT '',
   customerId TEXT NOT NULL REFERENCES customers(id),
   assigneeId TEXT,
