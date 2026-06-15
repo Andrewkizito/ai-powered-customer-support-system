@@ -19,6 +19,10 @@ import {
   RiBankCardLine,
   RiUserLine,
   RiQuestionLine,
+  RiErrorWarningLine,
+  RiArrowUpLine,
+  RiSubtractLine,
+  RiArrowDownLine,
 } from "react-icons/ri";
 import { useAppSelector, useAppDispatch } from "@/context/hooks";
 import { fetchIssues } from "@/context/issues/actions";
@@ -43,6 +47,25 @@ const typeConfig: Record<string, { icon: React.ReactNode; badgeClass: string }> 
   general: {
     icon: <RiQuestionLine className="size-3.5" />,
     badgeClass: "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:border-slate-800",
+  },
+};
+
+const priorityConfig: Record<string, { icon: React.ReactNode; badgeClass: string }> = {
+  critical: {
+    icon: <RiErrorWarningLine className="size-3.5" />,
+    badgeClass: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800",
+  },
+  high: {
+    icon: <RiArrowUpLine className="size-3.5" />,
+    badgeClass: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800",
+  },
+  medium: {
+    icon: <RiSubtractLine className="size-3.5" />,
+    badgeClass: "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-300 dark:border-yellow-800",
+  },
+  low: {
+    icon: <RiArrowDownLine className="size-3.5" />,
+    badgeClass: "bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800",
   },
 };
 
@@ -124,6 +147,10 @@ export function IssueTable() {
                     Status
                   </TableHead>
 
+                  <TableHead className="w-20 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Priority
+                  </TableHead>
+
                   <TableHead className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     Customer
                   </TableHead>
@@ -171,6 +198,18 @@ export function IssueTable() {
                       >
                         {issue.status.replace("_", " ")}
                       </Badge>
+                    </TableCell>
+
+                    <TableCell className="w-20">
+                      {issue.priority && (
+                        <Badge
+                          variant="outline"
+                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-normal capitalize ${priorityConfig[issue.priority]?.badgeClass ?? ""}`}
+                        >
+                          {priorityConfig[issue.priority]?.icon}
+                          {issue.priority}
+                        </Badge>
+                      )}
                     </TableCell>
 
                     <TableCell>

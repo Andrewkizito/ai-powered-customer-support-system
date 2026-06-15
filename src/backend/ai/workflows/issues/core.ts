@@ -1,17 +1,26 @@
 import { END, START, StateGraph } from "@langchain/langgraph";
 import { ClassificationState } from "./schema";
-import { resolveIssueDetails, classifyIssue, updateIssueFromClassification } from "./classify";
+import {
+  resolveIssueDetails,
+  classifyIssue,
+  updateIssueFromClassification,
+  answerGeneralQuetion,
+} from "./classify";
 import events from "../../../events/core";
 import { EventType } from "../../../events/types";
 
 const classificationWorkflow = new StateGraph(ClassificationState)
+  // Nodes
   .addNode("resolveIssueDetails", resolveIssueDetails)
   .addNode("classifyIssue", classifyIssue)
-  .addNode("updateIssueFromClassification", updateIssueFromClassification)
+  .addNode("answerGeneralQuetion", answerGeneralQuetion)
+  .addNode("updateIssueFromClassification", updateIssueFromClassification, {
+    ends: ["answerGeneralQuetion", END],
+  })
+  // Edges
   .addEdge(START, "resolveIssueDetails")
   .addEdge("resolveIssueDetails", "classifyIssue")
   .addEdge("classifyIssue", "updateIssueFromClassification")
-  .addEdge("updateIssueFromClassification", END)
   .compile();
 
 events.on(EventType.IssueCreated, async function (payload) {

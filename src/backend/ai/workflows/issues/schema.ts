@@ -12,13 +12,21 @@ export const ClassificationSchema = z.object({
   type: z.enum(IssueType),
   summary: z.string(),
   description: z.string(),
+  isQuestion: z.boolean(),
 });
 
 export type Classification = z.infer<typeof ClassificationSchema>;
 
+export const KnowledgebaseRetrieval = z.object({
+  answer: z.string(),
+  kbScore: z.enum(["low", "medium", "high"]),
+  docIds: z.array(z.string()),
+});
+
 export const ClassificationState = new StateSchema({
   issueId: z.string(),
   classification: ClassificationSchema.optional(),
+  knowledgebaseRetrieval: KnowledgebaseRetrieval.optional(),
   error: z.string().optional(),
   issueDetails: z.custom<IssueWithCustomer>(),
 });
