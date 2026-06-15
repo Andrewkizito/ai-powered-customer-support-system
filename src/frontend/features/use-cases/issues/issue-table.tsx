@@ -23,6 +23,10 @@ import {
   RiArrowUpLine,
   RiSubtractLine,
   RiArrowDownLine,
+  RiTimeLine,
+  RiCheckLine,
+  RiCloseCircleLine,
+  RiMailOpenLine,
 } from "react-icons/ri";
 import { useAppSelector, useAppDispatch } from "@/context/hooks";
 import { fetchIssues } from "@/context/issues/actions";
@@ -66,6 +70,25 @@ const priorityConfig: Record<string, { icon: React.ReactNode; badgeClass: string
   low: {
     icon: <RiArrowDownLine className="size-3.5" />,
     badgeClass: "bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800",
+  },
+};
+
+const statusConfig: Record<string, { icon: React.ReactNode; badgeClass: string }> = {
+  open: {
+    icon: <RiMailOpenLine className="size-3.5" />,
+    badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
+  },
+  in_progress: {
+    icon: <RiTimeLine className="size-3.5" />,
+    badgeClass: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800",
+  },
+  resolved: {
+    icon: <RiCheckLine className="size-3.5" />,
+    badgeClass: "bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800",
+  },
+  closed: {
+    icon: <RiCloseCircleLine className="size-3.5" />,
+    badgeClass: "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:border-slate-800",
   },
 };
 
@@ -193,9 +216,10 @@ export function IssueTable() {
 
                     <TableCell className="w-35">
                       <Badge
-                        variant="default"
-                        className="rounded-full px-2.5 py-0.5 text-xs font-normal! capitalize"
+                        variant="outline"
+                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-normal capitalize ${statusConfig[issue.status]?.badgeClass ?? ""}`}
                       >
+                        {statusConfig[issue.status]?.icon}
                         {issue.status.replace("_", " ")}
                       </Badge>
                     </TableCell>
