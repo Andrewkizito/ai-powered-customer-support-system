@@ -1,6 +1,7 @@
 import { CloudClient, type Collection } from "chromadb";
 import { OllamaEmbeddingFunction } from "@chroma-core/ollama";
 import chalk from "chalk";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
 const client = new CloudClient({
   apiKey: process.env.CHROMA_API_KEY,
@@ -22,11 +23,50 @@ export async function initChroma() {
       model: "embeddinggemma:latest",
     }),
   });
-  console.log(chalk.green("[chroma] general_kb collection ready"));
+
+  await initGeneralKb();
+  console.log(chalk.green("[chroma] ✅ general_kb collection ready"));
 }
 
 export async function getChroma() {
   if (!generalKb)
     throw new Error("ChromaDB not initialized. Call initChroma() first.");
   return { client, generalKb };
+}
+
+async function initGeneralKb() {
+  const doc = await Bun.file(
+    "data/knowledge/NovaStack Technologies Knowledge Base.md",
+  ).text();
+
+  const textsplitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 150,
+    chunkOverlap: 50,
+  });
+
+  const chunks = await textsplitter.splitText(doc);
+  const stored = await generalKb!.count();
+
+  if (stored === chunks.length) {
+    console.log(
+      chalk.grey(`[chroma] general_kb unchanged (${stored} chunks), skipping`),
+    );
+    return;
+  }
+
+  if (stored > 0) {
+    await generalKb!.delete({
+      ids: Array.from({ length: stored }, (_, i) => `general_kb_${i}`),
+    });
+    console.log(
+      chalk.yellow(`[chroma] Removed ${stored} stale chunks from general_kb`),
+    );
+  }
+
+  const ids = chunks.map((_, i) => `general_kb_${i}`);
+
+  await generalKb!.add({ ids, documents: chunks });
+  console.log(
+    chalk.green(`[chroma] Added ${chunks.length} chunks to general_kb`),
+  );
 }
