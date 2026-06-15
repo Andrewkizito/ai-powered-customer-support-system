@@ -7,6 +7,7 @@ import {
   handleGetIssues,
 } from "./controllers/issues/core.ts";
 import { handleGetCustomers } from "./controllers/customers/core.ts";
+import { handleDashboardStats } from "./controllers/dashboard/core.ts";
 import "./ai/workflows/issues/core.ts";
 
 await initDb();
@@ -25,6 +26,10 @@ const server = serve({
 
     "/api/customers": {
       GET: handleGetCustomers,
+    },
+
+    "/api/dashboard": {
+      GET: handleDashboardStats,
     },
 
     "/*": index,

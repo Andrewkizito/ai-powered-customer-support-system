@@ -140,3 +140,18 @@ ORDER BY issues.createdAt DESC LIMIT ? OFFSET ?`,
     },
   };
 }
+
+export function getDashboardStats() {
+  const row = db
+    .query(
+      `SELECT
+        COUNT(*) as total,
+        SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END) as open,
+        SUM(CASE WHEN status = 'awaiting_review' THEN 1 ELSE 0 END) as pendingReview,
+        SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) as resolved
+      FROM issues`,
+    )
+    .get() as { total: number; open: number; pendingReview: number; resolved: number };
+
+  return row;
+}
