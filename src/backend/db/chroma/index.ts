@@ -11,7 +11,11 @@ const client = new CloudClient({
 let generalKb: Collection | null = null;
 
 export async function initChroma() {
-  console.log(chalk.blue("[chroma] Initializing ChromaDB client and general_kb collection"));
+  console.log(
+    chalk.blue(
+      "[chroma] Initializing ChromaDB client and general_kb collection",
+    ),
+  );
   generalKb = await client.getOrCreateCollection({
     name: "general_kb",
     embeddingFunction: new OllamaEmbeddingFunction({
@@ -22,5 +26,7 @@ export async function initChroma() {
 }
 
 export async function getChroma() {
+  if (!generalKb)
+    throw new Error("ChromaDB not initialized. Call initChroma() first.");
   return { client, generalKb };
 }
