@@ -4,6 +4,7 @@ import {
   resolveIssueDetails,
   classifyIssue,
   updateIssueFromClassification,
+  resolveGeneralQuestion,
   answerGeneralQuetion,
 } from "./classify";
 import events from "../../../events/core";
@@ -13,14 +14,16 @@ const classificationWorkflow = new StateGraph(ClassificationState)
   // Nodes
   .addNode("resolveIssueDetails", resolveIssueDetails)
   .addNode("classifyIssue", classifyIssue)
+  .addNode("updateIssueFromClassification", updateIssueFromClassification)
   .addNode("answerGeneralQuetion", answerGeneralQuetion)
-  .addNode("updateIssueFromClassification", updateIssueFromClassification, {
+  .addNode("resolveGeneralQuestion", resolveGeneralQuestion, {
     ends: ["answerGeneralQuetion", END],
   })
   // Edges
   .addEdge(START, "resolveIssueDetails")
   .addEdge("resolveIssueDetails", "classifyIssue")
   .addEdge("classifyIssue", "updateIssueFromClassification")
+  .addEdge("updateIssueFromClassification", "resolveGeneralQuestion")
   .compile();
 
 events.on(EventType.IssueCreated, async function (payload) {

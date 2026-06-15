@@ -4,6 +4,7 @@ import type { IssueClassificationType } from "./schema";
 import { ClassificationSchema } from "./schema";
 import { getIssue, updateIssue } from "../../../db/sql/issues";
 import { getChroma } from "../../../db/chroma";
+import { IssueStatus } from "../../../controllers/issues/types";
 import chalk from "chalk";
 import z from "zod";
 import { IssueType } from "../../../controllers/issues/types";
@@ -153,6 +154,28 @@ export const updateIssueFromClassification: IssueNode = async (state) => {
 };
 
 // Specialized Nodes
+
+export const resolveGeneralQuestion: IssueNode = async (state) => {
+  const { classification } = state;
+
+  if (!classification?.isQuestion) {
+    console.log(
+      chalk.yellow(
+        `[resolveGeneralQuestion] Not a question, marking issue ${state.issueId} as resolved`,
+      ),
+    );
+    updateIssue(state.issueId, { status: IssueStatus.Resolved });
+    return new Command({ goto: END });
+  }
+
+  console.log(
+    chalk.blue(
+      `[resolveGeneralQuestion] Question detected, routing to answerGeneralQuestion`,
+    ),
+  );
+  return new Command({ goto: "answerGeneralQuestion" });
+};
+
 export const answerGeneralQuetion: IssueNode = async (state) => {
   try {
     const { summary, intent, description } = state.classification!;

@@ -74,6 +74,7 @@ export function updateIssue(
     priority?: string;
     subject?: string;
     description?: string;
+    status?: string;
   },
 ): void {
   const fields: string[] = [];
