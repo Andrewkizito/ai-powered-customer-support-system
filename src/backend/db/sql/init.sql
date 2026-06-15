@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS issues (
   id TEXT PRIMARY KEY,
   type TEXT CHECK(type IN ('bug', 'feature_request', 'billing', 'account', 'general')),
-  status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open', 'in_progress', 'resolved', 'closed')),
+  status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open', 'in_progress', 'resolved', 'closed', 'awaiting_review')),
   priority TEXT CHECK(priority IN ('low', 'medium', 'high', 'critical')),
   subject TEXT,
   description TEXT,

@@ -75,6 +75,7 @@ export function updateIssue(
     subject?: string;
     description?: string;
     status?: string;
+    response?: string;
   },
 ): void {
   const fields: string[] = [];

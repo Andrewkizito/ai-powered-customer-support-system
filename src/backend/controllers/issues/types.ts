@@ -11,6 +11,7 @@ export enum IssueStatus {
   InProgress = "in_progress",
   Resolved = "resolved",
   Closed = "closed",
+  AwaitingReview = "awaiting_review",
 }
 
 export enum IssuePriority {

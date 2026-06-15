@@ -27,6 +27,7 @@ import {
   RiCheckLine,
   RiCloseCircleLine,
   RiMailOpenLine,
+  RiEyeLine,
 } from "react-icons/ri";
 import { useAppSelector, useAppDispatch } from "@/context/hooks";
 import { fetchIssues } from "@/context/issues/actions";
@@ -111,6 +112,11 @@ const statusConfig: Record<
     icon: <RiCloseCircleLine className="size-3.5" />,
     badgeClass:
       "bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-300",
+  },
+  awaiting_review: {
+    icon: <RiEyeLine className="size-3.5" />,
+    badgeClass:
+      "bg-purple-100 text-purple-700 dark:bg-purple-950/70 dark:text-purple-300",
   },
 };
 

@@ -248,6 +248,20 @@ export const answerGeneralQuetion: IssueNode = async (state) => {
       ),
     );
 
+    if (result.kbScore === "high") {
+      updateIssue(state.issueId, {
+        status: IssueStatus.Resolved,
+        response: result.answer,
+      });
+      console.log(chalk.green(`[answerGeneralQuestion] High confidence, auto-resolved`));
+    } else {
+      updateIssue(state.issueId, {
+        status: IssueStatus.AwaitingReview,
+        response: result.answer,
+      });
+      console.log(chalk.yellow(`[answerGeneralQuestion] Low/medium confidence, awaiting review`));
+    }
+
     return new Command({
       update: {
         knowledgebaseRetrieval: {
