@@ -9,7 +9,7 @@ export type IssueCreatedPayload = {
 
 export type IssueUpdatedPayload = {
   issueId: string;
-  updatedDetails: Record<string, unknown>;
+  payload: Record<string, unknown>;
 };
 
 export type EventPayloads = {

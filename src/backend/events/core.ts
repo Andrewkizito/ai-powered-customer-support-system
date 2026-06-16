@@ -1,5 +1,5 @@
 import { EventEmitter } from "node:events";
-import type { EventType, EventPayloads } from "./types.ts";
+import { EventType, type EventPayloads } from "./types.ts";
 
 const emitter = new EventEmitter();
 
@@ -12,6 +12,12 @@ export function on<E extends EventType>(
 
 export function emit<E extends EventType>(event: E, payload: EventPayloads[E]) {
   emitter.emit(event, payload);
+}
+
+export function initServerEvents(server: Bun.Server<undefined>) {
+  on(EventType.IssueUpdated, (payload) => {
+    server.publish(EventType.IssueUpdated, JSON.stringify(payload));
+  });
 }
 
 export default {
