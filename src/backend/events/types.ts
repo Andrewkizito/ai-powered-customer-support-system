@@ -8,8 +8,8 @@ export type IssueCreatedPayload = {
 };
 
 export type IssueUpdatedPayload = {
-  issueId: string;
-  payload: Record<string, unknown>;
+  type: EventType.IssueUpdated;
+  payload: { issueId: string } & Record<string, unknown>;
 };
 
 export type EventPayloads = {

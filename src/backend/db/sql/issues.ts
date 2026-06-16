@@ -97,7 +97,10 @@ export function updateIssue(
 
   db.run(`UPDATE issues SET ${fields.join(", ")} WHERE id = ?`, params);
 
-  emit(EventType.IssueUpdated, { issueId: id, payload: data });
+  emit(EventType.IssueUpdated, {
+    type: EventType.IssueUpdated,
+    payload: { ...data, issueId: id },
+  });
 }
 
 export function getIssues(filters: GetIssuesInput): IssueListResponse {
