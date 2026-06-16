@@ -1,4 +1,6 @@
 import db from "./index.ts";
+import { emit } from "../../events/core.ts";
+import { EventType } from "../../events/types.ts";
 import type {
   IssueWithCustomer,
   IssueListResponse,
@@ -94,6 +96,8 @@ export function updateIssue(
   params.push(id);
 
   db.run(`UPDATE issues SET ${fields.join(", ")} WHERE id = ?`, params);
+
+  emit(EventType.IssueUpdated, { issueId: id, payload: data });
 }
 
 export function getIssues(filters: GetIssuesInput): IssueListResponse {
@@ -151,7 +155,12 @@ export function getDashboardStats() {
         SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) as resolved
       FROM issues`,
     )
-    .get() as { total: number; open: number; pendingReview: number; resolved: number };
+    .get() as {
+    total: number;
+    open: number;
+    pendingReview: number;
+    resolved: number;
+  };
 
   return row;
 }
