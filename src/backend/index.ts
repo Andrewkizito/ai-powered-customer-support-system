@@ -9,6 +9,8 @@ import {
 import { handleGetCustomers } from "./controllers/customers/core.ts";
 import { handleDashboardStats } from "./controllers/dashboard/core.ts";
 import "./ai/workflows/issues/core.ts";
+import { EventType } from "./events/types.ts";
+import { initServerEvents } from "./events/core.ts";
 
 await initDb();
 await initChroma();
@@ -34,11 +36,26 @@ const server = serve({
 
     "/*": index,
   },
+  fetch(req, server) {
+    // upgrade the request to a WebSocket
+    if (server.upgrade(req)) {
+      return; // do not return a Response
+    }
+    return new Response("Upgrade failed", { status: 500 });
+  },
+  websocket: {
+    open(ws) {
+      ws.subscribe(EventType.IssueUpdated);
+    },
+    message() {},
+  },
 
   development: process.env.NODE_ENV !== "production" && {
     hmr: true,
     console: true,
   },
 });
+
+initServerEvents(server);
 
 console.log(`🚀 Server running at ${server.url}`);
